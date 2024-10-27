@@ -7,7 +7,7 @@ from Bio.PDB.PDBParser import PDBParser
 from Bio.PDB.MMCIFParser import MMCIFParser
 
 try:
-    from Bio.PDB.Polypeptide import protein_letters_3to1
+    from Bio.Data.IUPACData import protein_letters_3to1_extended as protein_letters_3to1
 except ImportError:
     # pre 1.80
     from Bio.PDB import protein_letters_3to1
@@ -114,7 +114,9 @@ def get_residue_data(chain, ignore_hetero=True):
     for residue in chain.get_residues():
         if residue.id[0] == " " and ignore_hetero:
             if "CA" in residue.child_dict:
-                coords.append(residue.child_dict["CA"].coord)
-                seq.append(protein_letters_3to1[residue.resname])
-
+                coords.append(residue.child_dict["CA"].coord)                
+                if residue.resname == 'UNK':
+                    seq.append('X')
+                else:
+                    seq.append(protein_letters_3to1[residue.resname])
     return np.vstack(coords), "".join(seq)
