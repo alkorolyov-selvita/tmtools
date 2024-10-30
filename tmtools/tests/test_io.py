@@ -5,6 +5,10 @@ import numpy.testing as nptest
 from ..io import get_residue_data, get_structure
 from ..testing import get_pdb_path, get_mmcif_path
 
+from Bio.PDB.Chain import Chain
+from Bio.PDB.Residue import Residue
+from Bio.PDB.Atom import Atom
+
 
 class TestIO(unittest.TestCase):
     def test_get_structure(self):
@@ -43,3 +47,31 @@ class TestIO(unittest.TestCase):
         self.assertEqual(len(seq), coords.shape[0])
         self.assertEqual(seq[:5], "DCCSY")
         self.assertEqual(seq[-5:], "AKDLP")
+    
+    def test_get_residue_data(self):
+        # Given
+        chain = Chain('A')
+        ca = Atom('CA', coord=np.array([1.0, 0.0, 0.0]), bfactor=1.0, occupancy=1.0, altloc='', fullname='CA', serial_number=1, element='C')
+        
+        r = Residue(id=(' ', 1, ' '), resname='VAL', segid=' ')
+        r.add(ca)
+        chain.add(r)
+
+        r = Residue(id=(' ', 2, ' '), resname='PYL', segid=' ')
+        r.add(ca)
+        chain.add(r)
+
+        r = Residue(id=(' ', 3, ' '), resname='SEC', segid=' ')
+        r.add(ca)
+        chain.add(r)
+        
+        r = Residue(id=(' ', 4, ' '), resname='UNK', segid=' ')
+        r.add(ca)
+        chain.add(r)
+
+        # When
+        coords, seq = get_residue_data(chain)
+
+        self.assertEqual(seq, "VOUX")
+
+        
