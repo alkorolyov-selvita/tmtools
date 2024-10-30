@@ -69,9 +69,10 @@ class TestIO(unittest.TestCase):
         r.add(ca)
         chain.add(r)
 
-        # When
+        # When 
         coords, seq = get_residue_data(chain)
 
+        # Then
         self.assertEqual(seq, "VOUX")
 
         
