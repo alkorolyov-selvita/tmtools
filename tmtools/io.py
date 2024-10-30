@@ -7,7 +7,8 @@ from Bio.PDB.PDBParser import PDBParser
 from Bio.PDB.MMCIFParser import MMCIFParser
 
 try:
-    from Bio.Data.IUPACData import protein_letters_3to1_extended as protein_letters_3to1
+    from Bio.Data.IUPACData import protein_letters_3to1_extended
+    protein_letters_3to1 = {k.upper(): v for k, v in protein_letters_3to1_extended.items()}
 except ImportError:
     # pre 1.80
     from Bio.PDB import protein_letters_3to1
